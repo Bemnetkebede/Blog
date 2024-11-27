@@ -14,7 +14,9 @@ app.use(express.urlencoded({ extended: true}))
 const PORT = process.env.PORT || 5000
 const MONGO_URL = process.env.MONGO_URL
 
-mongoose.connect(MONGO_URL)
+mongoose.set('debug', true); 
+
+mongoose.connect(MONGO_URL,  {useNewUrlParser: true, useUnifiedTopology: true ,  serverSelectionTimeoutMS: 30000,  socketTimeoutMS: 45000, serverSelectionTimeoutMS: 30000}  )
 .then(()=>console.log('Mongoose Connected'))
 .catch((err)=>console.log(err))
 
