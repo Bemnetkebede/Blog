@@ -6,8 +6,12 @@ const User = require('../Models/User')
 const router = express.Router();
 
 router.post('/signup', async (req, res) => {
+    const { username, email, password, role } = req.body;
     try {
-        const { username, email, password, role } = req.body;
+        
+        const userExists = await User.findOne({ email });
+        if (userExists) return res.status(400).json({ message: 'User already exists' });
+
         const user = new User({ username, email, password, role });
         await user.save();
         res.status(201).json({ message: 'User created successfully' });
@@ -31,5 +35,6 @@ router.post('/login', async (req, res) => {
         res.status(400).json({ error: err.message });
     }
 });
+console.log(process.env.JWT_SECRET);
 
 module.exports = router;
