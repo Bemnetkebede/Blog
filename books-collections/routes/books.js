@@ -14,7 +14,8 @@ const bookValidationSchema = Joi.object({
 // GET all books
 router.get('/books', async (req, res) => {
     try {
-        const books = await Book.find();
+        const books = await Book.find({}, null, { limit: 10 });
+        console.log('Books fetched:', books);
         res.json(books);
     } catch (err) {
         res.status(500).json({ message: err.message });
