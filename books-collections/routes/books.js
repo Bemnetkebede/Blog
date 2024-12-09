@@ -78,30 +78,31 @@ router.get('/books/all', authenticate, authorize(['admin']), async (req, res) =>
 router.get('/books', authenticate, async (req, res) => {
     try {
         const userRole = req.user.role;
-        const userId = req.user.id;
+        const userId = new mongoose.Types.ObjectId(req.user.id);
         const { isFavorite } = req.query;
 
-        let filterCriteria = { createdBy: userId }; // Default to books created by the user
+        let filterCriteria = {};
 
-        if (userRole === 'admin') {
-            filterCriteria = {}; // Admins see all books
-            if (isFavorite === 'true') {
-                filterCriteria.isFavorite = true;
-            }
-        } else if (userRole === 'user' && isFavorite === 'true') {
-            filterCriteria.favorites = { $in: [new mongoose.Types.ObjectId(userId)] };
+        // If the user is a user and we want to get books marked as their favorite
+        if (userRole === 'user' && isFavorite === 'true') {
+            filterCriteria.favorites = { $in: [userId] }; // Check if the user's ID is in the favorites array
         }
 
         console.log('Filter criteria:', filterCriteria);
 
+        // Find books based on the filter criteria and populate the favorites field
         const books = await Book.find(filterCriteria).populate('favorites');
         console.log('Books found:', books);
-        res.json(books || []); //Always send an array, even if it's empty
+        res.json(books || []);
     } catch (err) {
-        console.error(err);
+        console.error('Error fetching books:', err);
         res.status(500).json({ error: 'Failed to fetch books' });
     }
 });
+
+
+
+
 
 
 
