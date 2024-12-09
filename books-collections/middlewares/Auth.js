@@ -6,6 +6,7 @@ const authenticate = (req, res, next) => {
     try {
         const verified = jwt.verify(token, process.env.JWT_SECRET);
         req.user = verified;
+        console.log("Authenticated User:", req.user); 
         next();
     } catch {
         res.status(401).json({ error: 'Invalid token' });
@@ -13,9 +14,11 @@ const authenticate = (req, res, next) => {
 };
 
 const authorize = (role) => (req, res, next) => {
-    if (req.user.role !== role) return res.status(403).json({ error: 'Forbidden' });
+    console.log("User Role:", req.user.role); 
+    console.log("Required Role:", role);
+    if (!req.user.role.includes(req.user.role)) return res.status(403).json({ error: 'Forbidden' });
     next();
 };
-
 module.exports = { authenticate, authorize };
 
+// req.user.role !== role

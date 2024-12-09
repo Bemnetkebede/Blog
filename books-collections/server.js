@@ -5,12 +5,13 @@ const router = express.Router();
 require('dotenv').config();
 const booksRouter = require('./routes/books');
 const authRoutes = require('./routes/Auth')
-
+const cors = require('cors');
 
 
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true}))
+app.use(cors())
 
 const PORT = process.env.PORT || 5000
 const MONGO_URL = process.env.MONGO_URL
@@ -24,18 +25,13 @@ mongoose.connect(MONGO_URL,
 .then(()=>console.log('Mongoose Connected'))
 .catch((err)=>console.log(err))
 
+mongoose.connection.on('error', (err) => {
+    console.error('Mongoose connection error:', err);
+});
 
-mongoose.connection.on('connected', () => {
-    console.log('Mongoose successfully connected to MongoDB');
-    });
-    
-    mongoose.connection.on('error', (err) => {
-        console.error('Mongoose connection error:', err);
-    });
-    
-    mongoose.connection.on('disconnected', () => {
-        console.warn('Mongoose disconnected');
-    });
+mongoose.connection.on('disconnected', () => {
+    console.warn('Mongoose disconnected');
+});
     
 
 app.use('/api', booksRouter);
@@ -48,9 +44,6 @@ app.use((req, res, next) => {
         next();
     });
     
-
-
-
 
 app.listen(PORT , ()=>console.log(`Server running on port ${PORT}`))
     

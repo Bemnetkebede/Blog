@@ -6,6 +6,7 @@ const bookSchema = new mongoose.Schema({
     isbn: { type: String, required: true, unique: true },
     publishedYear: { type: Number, required: true },
     isFavorite: { type: Boolean, default: false },
+    favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
 
 const Book = mongoose.model('Book', bookSchema);
