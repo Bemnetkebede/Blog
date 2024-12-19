@@ -53,7 +53,6 @@ router.get('/books', authenticate, async (req, res) => {
 });
 
 
-// POST a new book
 router.post('/books', async (req, res) => {
     const { error } = bookValidationSchema.validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
@@ -69,7 +68,6 @@ router.post('/books', async (req, res) => {
 }
 });
 
-// PUT update a book by ID
 router.put('/books/:id', async (req, res) => {
     const { error } = bookValidationSchema.validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
@@ -83,7 +81,6 @@ router.put('/books/:id', async (req, res) => {
 }
 });
 
-// DELETE a book by ID
 router.delete('/books/:id',authenticate,  authorize(['admin']), async (req, res) => {
 try {
     const deletedBook = await Book.findByIdAndDelete(req.params.id);
@@ -94,7 +91,6 @@ try {
 }
 });
 
-// Custom endpoint to get random book recommendation
 router.get('/books/recommendations', async (req, res) => {
     try {
     const count = await Book.countDocuments();
