@@ -19,62 +19,14 @@ const bookValidationSchema = Joi.object({
 router.get('/books/all', authenticate, authorize(['admin']), async (req, res) => {
     try {
       const books = await Book.find(); // Fetch all books
+      console.log('Books found:', books);
         res.json(books);
         } catch (err) {
         res.status(500).json({ error: 'Failed to fetch books' });
         }
     });
 
-// GET all books
 
-
-// router.get('/books', authenticate, async (req, res) => {
-//     try {
-//         const userRole = req.user.role; // Extract user role from the token
-//         const userId = req.user.id; // Extract user ID from the token
-//         const { isFavorite } = req.query; // Check for the isFavorite query parameter
-
-//         let filterCriteria = {};
-
-//         if (userRole === 'user') {
-//             // If the user is a regular user, filter by their ID (either all or favorites)
-//             filterCriteria.createdBy = userId; // Only show books created by the user
-
-//             if (isFavorite === 'true') {
-//                 // Ensure the user ID is in the favorites array
-//                 filterCriteria.favorites ={ $in: [new mongoose.Types.ObjectId(userId)] }; // Use ObjectId for comparison
-//             }
-//         } else if (userRole === 'admin') {
-//             // If the user is an admin, show all books, with optional favorites filtering
-//             if (isFavorite === 'true') {
-//                 filterCriteria.isFavorite = true; // Admin can filter by isFavorite
-//             }
-
-//         } else {
-//             return res.status(403).json({ message: 'Unauthorized' });
-//         }
-
-
-//         // Debug log to check the filter criteria
-//         console.log('Filter criteria:', filterCriteria);
-
-//         // Fetch books based on the filter criteria
-//         const books = await Book.find(filterCriteria).populate('favorites');; 
-
-//         // Debug log to check books found
-//         console.log('Books found:', books);
-
-//         // If no books are found, explicitly return an empty array
-//         if (books.length === 0) {
-//             return res.status(200).json({}); // Return an empty array
-//         }
-
-//         res.json(books); // Return the filtered books
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).json({ error: 'Failed to fetch books' });
-//     }
-// });
 router.get('/books', authenticate, async (req, res) => {
     try {
         const userRole = req.user.role;
@@ -99,15 +51,6 @@ router.get('/books', authenticate, async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch books' });
     }
 });
-
-
-
-
-
-
-
-
-
 
 
 // POST a new book
