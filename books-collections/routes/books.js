@@ -116,7 +116,6 @@ router.post('/books/favorite/:id', authenticate, async (req, res) => {
             book.favorites = []; // Ensure the favorites field exists
         }
 
-        // Check if user already marked it as favorite
         if (book.favorites.includes(userId)) {
             return res.status(400).json({ message: 'Book already marked as favorite by this user' });
         }
