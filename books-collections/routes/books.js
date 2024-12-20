@@ -102,17 +102,15 @@ router.get('/books/recommendations', async (req, res) => {
 }
 });
 
-// Custom endpoint to mark a book as favorite
 router.post('/books/favorite/:id', authenticate, async (req, res) => {
     try {
-        const userId = req.user.id; // Retrieve user ID from token
+        const userId = req.user.id; 
         const book = await Book.findById(req.params.id);
 
         if (!book) {
             return res.status(404).json({ message: 'Book not found' });
         }
 
-        // Add user-specific favorite logic
         if (!book.favorites) {
             book.favorites = []; // Ensure the favorites field exists
         }
