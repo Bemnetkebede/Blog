@@ -102,7 +102,6 @@ router.get('/books/recommendations', async (req, res) => {
 }
 });
 
-// Custom endpoint to mark a book as favorite
 router.post('/books/favorite/:id', authenticate, async (req, res) => {
     try {
         const userId = req.user.id; // Retrieve user ID from token
